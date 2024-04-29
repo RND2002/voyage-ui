@@ -11,7 +11,7 @@ export default {
         neonGreen:"#39FF14",
         dirtWhite:"#FFF7F7",
         lightGreen:"#B7C9B1",
-        gold:"#E6B87E"
+        mustard:"#ffc017"
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],

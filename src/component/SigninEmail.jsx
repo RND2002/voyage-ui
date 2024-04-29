@@ -1,5 +1,42 @@
+import { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
+import {useAuth} from '../auth/AuthContext'
+import PropTypes from 'prop-types';
+import { useNavigate } from "react-router-dom";
 const SigninEmail = () => {
+  const [email,setEmail]=useState('')
+  const [password,setPassword]=useState('')
+ 
+  const authContext=useAuth()
+  const navigate=useNavigate()
+  function handleEmailChange(e){
+    setEmail(e.target.value)
+   
+  }
+
+  async function goToFeedsPage(){
+    await navigate(`/feeds`)
+  }
+
+  function handlePasswordChange(e){
+    setPassword(e.target.value)
+  }
+  const handleLoginForm = async (e) => {
+    e.preventDefault();
+    try {
+      if (await authContext.login(email, password)) {
+        console.log("done");
+        //console.log(authContext.token)
+        // navigate(`/feeds`)
+        goToFeedsPage();
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.error("Error occurred during login:", error);
+    }
+  };
+  
   return (
     <>
       <div className="h-[100vh] bg-dirtWhite flex justify-center items-center ">
@@ -13,6 +50,7 @@ const SigninEmail = () => {
             Enter the email address associated with your account, and we’ll send a magic link to your inbox.
             </h3>
           </div>
+          <form onSubmit={handleLoginForm}>
           <div className="mt-10 ">
             <h3 className="font-normal text-xs">Your Email</h3>
           </div>
@@ -20,6 +58,18 @@ const SigninEmail = () => {
             <input
               type="email"
               placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+              className="border-b border-gray-800 w-full px-3 py-2 focus:outline-none"
+            />
+            
+          </div>
+          <div className="mt-10">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
               className="border-b border-gray-800 w-full px-3 py-2 focus:outline-none"
             />
             
@@ -27,9 +77,10 @@ const SigninEmail = () => {
           {/* <div className="mt-1"><FaGoogle size={32}/></div> */}
 
           <div className="flex justify-around border border-black bg-black rounded-full h-10 w-[30vh]  mt-10">
-            <button className="text-white">Continue</button>
+            <button type="submit" className="text-white">Continue</button>
             
           </div>
+          </form>
           {/* <div className="mt-10">
             <span className="font-medium">No account? </span>
             <span className="text-green-700 font-semibold">Create one</span>
@@ -53,6 +104,10 @@ Google Privacy Policy and Terms of Service apply.
       </div>
     </>
   );
+};
+
+SigninEmail.propTypes = {
+  authentication: PropTypes.func.isRequired, // Ensure authentication is a function
 };
 
 export default SigninEmail;

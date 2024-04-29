@@ -1,5 +1,8 @@
 // BlogCardList.js
 
+import { useEffect, useState } from 'react';
+import { executeGetPostService } from '../api/PostApiService';
+import { useAuth } from '../auth/AuthContext';
 import BlogCard from '../component/BlogCard';
 
 
@@ -12,11 +15,27 @@ const BlogCardList = () => {
     { id: 4, author: 'Emily Brown', title: 'The Future of Space Exploration', date: 'April 17, 2024', image: 'https://th.bing.com/th/id/OIP.COIvX3HRYQpJd6JUM01FRQAAAA?w=309&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7' },
   ];
 
+  const [blogArray,setBlogArray]=useState([])
+
+  const authContext=useAuth()
+  async function getFeedPost(){
+    const response=await executeGetPostService(authContext.token)
+    setBlogArray(response.data.content)
+    console.log(response.data.content)
+  }
+  useEffect(()=>{
+    getFeedPost()
+  },[])
+
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1 lg:w-[100%] mx-auto sm:px-4 sm:mx-2 lg:mx-auto lg:h-[900px] mt-4">
+  <div className='container '>
+      <div className="row mb-2">
+    <div className='col-md-6'>
     {dummyData.map((item) => (
       item.author && <BlogCard key={item.id} author={item.author} title={item.title} date={item.date} image={item.image} />
     ))}
+    </div>
+  </div>
   </div>
   
 
